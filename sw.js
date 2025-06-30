@@ -22,19 +22,25 @@ self.addEventListener('install', event => {
   );
 });
 
-// Event fetch: menyajikan aset dari cache
+// Event fetch: mencoba jaringan dulu, baru cache (Network-First)
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Jika aset ada di cache, sajikan dari cache.
-        // Jika tidak, ambil dari jaringan.
-        return response || fetch(event.request);
+    fetch(event.request)
+      .then(networkResponse => {
+        // Jika berhasil, simpan ke cache dan sajikan respons dari jaringan
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+      })
+      .catch(() => {
+        // Jika gagal (offline), coba ambil dari cache sebagai fallback
+        return caches.match(event.request);
       })
   );
 });
 
-// Event activate: membersihkan cache lama (opsional tapi disarankan)
+// Event activate: membersihkan cache lama
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(

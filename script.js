@@ -11,6 +11,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const toastBody = document.getElementById('toastBodyContent');
     const toast = new bootstrap.Toast(toastElement);
     const dropdownRiwayat = document.getElementById('dropdownRiwayat');
+    const installButton = document.getElementById('install-button');
+
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installButton.style.display = 'block';
+    });
+
+    installButton.addEventListener('click', () => {
+        installButton.style.display = 'none';
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                deferredPrompt = null;
+            });
+        }
+    });
 
     const getTodayISO = () => {
         const today = new Date();

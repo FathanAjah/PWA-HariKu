@@ -1,0 +1,21 @@
+{
+  "name": "HariKu - Your Planner Assistant",
+  "short_name": "HariKu",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "description": "A simple planner application to manage your daily schedule.",
+  "icons": [
+    {
+      "src": "user-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "user-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
